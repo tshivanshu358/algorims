@@ -45,8 +45,8 @@ jobs:
           mkdir -p ~/.ssh 
           echo "${{ secrets.EC2_PEM }}" > ~/.ssh/ec2_key.pem
           chmod 600 ~/.ssh/ec2_key.pem
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem -r ./* $EC2_USER@ec2-$EC2_HOST:/home/ubuntu/algorim/
-          ssh -i ~/.ssh/ec2_key.pem $EC2_USER@ec2-$EC2_HOST.compute-1.amazonaws.com
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key.pem -r ./* $EC2_USER@$EC2_HOST:/home/ubuntu/algorim/
+          ssh -i ~/.ssh/ec2_key.pem $EC2_USER@$EC2_HOST
 
     
       - name: Configure AWS credentials
