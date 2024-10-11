@@ -96,7 +96,7 @@ jobs:
 
       - name: Apply Ingress Controller
         run: |
-          kubectl apply -f ingress/ingress-controller.yml
+          kubectl apply -f ingress/nginx-controller.yml
           kubectl apply -f ingress/ingress.yml
 
       - name: Verify Ingress and NGINX
