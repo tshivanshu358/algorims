@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: go-server-ingress
+  namespace: default  # Use the namespace where your service is deployed
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: a110c9561b62e4e31ac948b819ff7ea8-1529196059.us-east-1.elb.amazonaws.com  #domain or external ip
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: go-server-service  # Your service name
+                port:
+                  number: 8282

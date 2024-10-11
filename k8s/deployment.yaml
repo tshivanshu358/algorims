@@ -15,8 +15,8 @@ spec:
         app: go-server
     spec:
       containers:
-      - name: confident_moore
-        image: tshivanshu/view-app:latest  # Docker Hub image
+      - name: go-server-ctnr
+        image: tshivanshu/view-app:v1  # Docker Hub image
         ports:
         - containerPort: 8282
         resources:
