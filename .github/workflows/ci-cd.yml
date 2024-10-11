@@ -42,8 +42,8 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_IP }}
           EC2_KEY: ${{ secrets.EC2_PEM }}
         run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/my-ec2-key -r ./* $EC2_USER@ec2-$EC2_HOST:/home/ubuntu/algorim/
-          ssh -i "practical.pem" ubuntu@ec2-3-94-77-14.compute-1.amazonaws.com
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/$EC2_KEY -r ./* $EC2_USER@ec2-$EC2_HOST:/home/ubuntu/algorim/
+          ssh -i $EC2_KEY $EC2_USER@ec2-$EC2_HOST.compute-1.amazonaws.com
 
     
       - name: Configure AWS credentials
