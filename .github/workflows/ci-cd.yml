@@ -46,8 +46,8 @@ jobs:
       - name: Update KUBECONFIG
         id: kubeconfig
         run: |
-          echo "($(aws eks update-kubeconfig --name <cluster_name> --region <region> --output json | base64)" > $GITHUB_ENV
-          KUBECONFIG=$(aws eks update-kubeconfig --name <cluster_name> --region <region> --output json | base64)
+          echo "($(aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1 --output json | base64)" > $GITHUB_ENV
+          KUBECONFIG=$(aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1 --output json | base64)
 
       - name: Verify deployment status
         env:
