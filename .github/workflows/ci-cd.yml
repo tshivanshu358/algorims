@@ -62,9 +62,9 @@ jobs:
 
       - name: Update EKS deployment
         run: |
-          kubectl set image deployment/go-server-deployment go-server-ctnr=${{ secrets.DOCKER_USERNAME }}/view-app:v1 --record
+          kubectl set image deployment/go-server-deployment go-server-ctnr=${{ secrets.DOCKER_USERNAME }}/view-app:v1
           kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/service.yml
 
   # Job 3: Verify Deployment
   verify:
