@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: go-simple-server-service
+  name: go-server-service
 spec:
   selector:
-    app: go-simple-server
+    app: go-server
   type: LoadBalancer   #for external access
   ports:
   - protocol: TCP
