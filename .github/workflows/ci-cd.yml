@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -23,6 +24,11 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/view-app:v1 .
           docker push ${{ secrets.DOCKER_USERNAME }}/view-app:v1
 
+  deploy:
+    name: Deploy to EKS
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -32,30 +38,36 @@ jobs:
 
       - name: EKS configure
         run: |
-          aws eks update-kubeconfig --name ${{ secrets.Cluster_Name }}<cluster_name> --region us-east-1
+          aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1
 
       - name: Update EKS deployment
-        uses: kubernetes/deploy-action@v1
-        with:
-          # kubeconfig: ${{ secrets.KUBECONFIG }}
-          deployment: go-server-deployment
-          image: ${{ secrets.DOCKER_USERNAME }}/view-app:v1
-          container-port: 8282
-          configmaps: |
-            deployment.yaml
-            service.yaml
+        run: |
+          kubectl set image deployment/go-server-deployment confident_moore=${{ secrets.DOCKER_USERNAME }}/view-app:v1 --record
 
-      - name: Verify deployment
+      - name: Apply Kubernetes configuration
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+
+  verify:
+    name: Verify Deployment
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Verify deployment status
         run: |
           kubectl get deployments
           kubectl get pods
           kubectl get svc
+
+      - name: Install NGINX Ingress Controller
+        run: |
           kubectl create namespace ingress-nginx
           kubectl apply -f nginx-controller.yaml
           kubectl apply -f ingress.yaml
+
+      - name: Verify Ingress
+        run: |
           kubectl get deployments -n ingress-nginx
           kubectl get services -n ingress-nginx
           kubectl get ingresses
-
-
-
