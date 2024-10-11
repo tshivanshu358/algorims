@@ -13,8 +13,8 @@ spec:
         app: test-app
     spec:
       containers:
-      - name: test-app
-        image: test-app:latest
+      - name: tshivanshu/test-app
+        image: tshivanshu/test-app:latest
         ports:
         - containerPort: 6666
 

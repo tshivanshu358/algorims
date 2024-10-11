@@ -1,4 +1,4 @@
-FROM golang:1.18 as builder
+FROM golang:1.21
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY . .
 # Build the Go app
 RUN go build -o main main.go
 
-# Expose port 8080 to the outside world
+# Expose port to the outside world
 EXPOSE 6666
 
 # Command to run the executable
