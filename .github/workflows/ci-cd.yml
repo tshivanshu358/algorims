@@ -65,6 +65,8 @@ jobs:
           kubectl set image deployment/go-server-deployment go-server-ctnr=${{ secrets.DOCKER_USERNAME }}/view-app:v1
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yml
+          kubectl apply -f ingress/nginx-controller.yml
+          kubectl apply -f ingress/ingress.yml
 
   # Job 3: Verify Deployment
   verify:
@@ -92,12 +94,12 @@ jobs:
           kubectl get deployments
           kubectl get pods
           kubectl get svc
-          kubectl get ingresses
+       #   kubectl get ingresses
 
-      - name: Apply Ingress Controller
-        run: |
-          kubectl apply -f ingress/nginx-controller.yml
-          kubectl apply -f ingress/ingress.yml
+      #- name: Apply Ingress Controller
+      #  run: |
+          #kubectl apply -f ingress/nginx-controller.yml
+          #kubectl apply -f ingress/ingress.yml
 
       - name: Verify Ingress and NGINX
         run: |
