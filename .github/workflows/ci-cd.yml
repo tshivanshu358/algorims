@@ -50,7 +50,7 @@ jobs:
       - name: Apply Kubernetes configuration
         run: |
           kubectl apply -f ./k8s/deployment.yaml
-          kubectl apply -f ./k8s/service.yaml
+          kubectl apply -f ./k8s/service.yml
 
   verify:
     name: Verify Deployment
