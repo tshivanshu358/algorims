@@ -1,16 +1,17 @@
-FROM golang:1.21
+# Use an official Go runtime as a parent image
+FROM golang:1.21-alpine
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Copy the source from the current directory to the Working Directory inside the container
+# Copy the source code into the container
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main main.go
+RUN go build -o server .
 
-# Expose port to the outside world
+# Expose port 8282 to the outside world
 EXPOSE 8282
 
-# Command to run the executable
-CMD ["/app/main"]
+# Run the executable
+CMD ["./server"]

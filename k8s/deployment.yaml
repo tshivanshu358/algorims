@@ -1,26 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-app
+  name: go-server-deployment
+  labels:
+    app: go-server
 spec:
-  replicas: 2
+  replicas: 2  # desired pods
   selector:
     matchLabels:
-      app: test-app
+      app: go-server
   template:
     metadata:
       labels:
-        app: test-app
+        app: go-server
     spec:
       containers:
-      - name: test-app
-        image: tshivanshu/test-app:latest
+      - name: confident_moore
+        image: tshivanshu/view-app:latest  # Docker Hub image
         ports:
         - containerPort: 8282
         resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
           limits:
-            cpu: 200m
-            memory: 256Mi
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
