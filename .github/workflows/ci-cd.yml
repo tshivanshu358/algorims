@@ -49,8 +49,8 @@ jobs:
 
       - name: Apply Kubernetes configuration
         run: |
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
+          kubectl apply -f ./k8s/deployment.yaml
+          kubectl apply -f ./k8s/service.yaml
 
   verify:
     name: Verify Deployment
@@ -66,8 +66,8 @@ jobs:
       - name: Install NGINX Ingress Controller
         run: |
           kubectl create namespace ingress-nginx
-          kubectl apply -f ingress/nginx-controller.yaml
-          kubectl apply -f ingress/ingress.yaml
+          kubectl apply -f ./ingress/nginx-controller.yaml
+          kubectl apply -f ./ingress/ingress.yaml
 
       - name: Verify Ingress
         run: |
