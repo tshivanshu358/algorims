@@ -6,9 +6,11 @@ on:
       - main
 
 jobs:
+  # Job 1: Build and Push Docker Image
   build:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,14 +26,26 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/view-app:v1 .
           docker push ${{ secrets.DOCKER_USERNAME }}/view-app:v1
 
+  # Job 2: Deploy to EC2 and EKS
   deploy:
-    name: Deploy to EKS
+    name: Deploy to EC2 and EKS
     runs-on: ubuntu-latest
     needs: build
+
     steps:
-      - name: Checkout code (to access YAML files)
+      - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Transfer code to EC2
+        env:
+          EC2_USER: ubuntu
+          EC2_HOST: ${{ secrets.EC2_IP }}
+          EC2_KEY: ${{ secrets.EC2_PEM }}
+        run: |
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/my-ec2-key -r ./* $EC2_USER@ec2-$EC2_HOST:/home/ubuntu/algorim/
+          ssh -i "practical.pem" ubuntu@ec2-3-94-77-14.compute-1.amazonaws.com
+
+    
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -43,46 +57,36 @@ jobs:
         run: |
           aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1
 
-      - name: Update KUBECONFIG
-        id: kubeconfig
+      - name: Update EKS deployment
         run: |
-          echo "($(aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1 --output json | base64)" > $GITHUB_ENV
-          KUBECONFIG=$(aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1 --output json | base64)
+          kubectl set image deployment/go-server-deployment go-server-ctnr=${{ secrets.DOCKER_USERNAME }}/view-app:v1 --record
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
 
-      - name: Verify deployment status
-        env:
-         KUBECONFIG: ${{ env.KUBECONFIG }}
-        run: |
-          echo $KUBECONFIG | base64 -d > ~/.kube/config
-          kubectl get deployments
-
-     # - name: Update EKS deployment
-     #   run: |
-      #    kubectl set image deployment/go-server-deployment go-server-ctnr=${{ secrets.DOCKER_USERNAME }}/view-app:v1 --record
-
-      - name: Apply Kubernetes configuration
-        run: |
-          kubectl apply -f ./k8s/deployment.yaml
-          kubectl apply -f ./k8s/service.yml
-
+  # Job 3: Verify Deployment
   verify:
     name: Verify Deployment
     runs-on: ubuntu-latest
     needs: deploy
+
     steps:
-      - name: Verify deployment status
+      - name: EKS configure
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1
+
+      - name: Verify Deployment
         run: |
           kubectl get deployments
           kubectl get pods
           kubectl get svc
+          kubectl get ingresses
 
-      - name: Install NGINX Ingress Controller
+      - name: Apply Ingress Controller
         run: |
-          kubectl create namespace ingress-nginx
-          kubectl apply -f ./ingress/nginx-controller.yaml
-          kubectl apply -f ./ingress/ingress.yaml
+          kubectl apply -f ingres/ingress-controller.yaml
+          kubectl apply -f ingres/ingress.yaml
 
-      - name: Verify Ingress
+      - name: Verify Ingress and NGINX
         run: |
           kubectl get deployments -n ingress-nginx
           kubectl get services -n ingress-nginx
