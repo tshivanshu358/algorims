@@ -60,7 +60,6 @@ jobs:
 
       - name: EKS configure
         run: |
-          aws configure
           aws eks update-kubeconfig --name ${{ secrets.CLUSTER_NAME }} --region us-east-1
 
       - name: Update EKS deployment
