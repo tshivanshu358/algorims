@@ -44,7 +44,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-ingress-service
+  name: go-server-service
   namespace: ingress-nginx
 spec:
   type: LoadBalancer
