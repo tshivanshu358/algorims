@@ -62,7 +62,7 @@ jobs:
 
       - name: Update EKS deployment
         run: |
-          kubectl set image deployment/go-server-deployment confident_moore=${{ secrets.DOCKER_USERNAME }}/view-app:v1 --record
+          kubectl set image deployment/go-server-deployment confident_moore=${{ secrets.DOCKER_USERNAME }}/view-app:v1
 
       - name: Apply Kubernetes configuration
         run: |
