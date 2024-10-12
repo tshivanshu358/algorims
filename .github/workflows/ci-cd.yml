@@ -92,6 +92,7 @@ jobs:
       - name: Verify Deployment
         run: |
           kubectl apply -f ingress/nginx-controller.yml
+          kubectl apply -f ingress/service.yml
           kubectl apply -f ingress/ingress.yml
           kubectl get deployments
           kubectl get pods
