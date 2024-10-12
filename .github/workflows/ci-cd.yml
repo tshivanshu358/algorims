@@ -62,13 +62,13 @@ jobs:
 
       - name: Update EKS deployment
         run: |
-          kubectl set image deployment/go-server-deployment go-server-ctnr=${{ secrets.DOCKER_USERNAME }}/view-app:v1
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yml
-          
-          # kubectl create ns ingress-nginx
+          kubectl set image deployment/go-server-deployment confident_moore=${{ secrets.DOCKER_USERNAME }}/view-app:v1 --record
 
-  # Job 3: Verify Deployment
+      - name: Apply Kubernetes configuration
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
+
   verify:
     name: Verify Deployment
     runs-on: ubuntu-latest
