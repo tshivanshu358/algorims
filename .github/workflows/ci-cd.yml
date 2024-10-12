@@ -77,11 +77,23 @@ jobs:
     steps:    
       - name: Deploy to EC2
         env:
+         
+         HOST: ${{ secrets.EC2_HOST }}
+         USER: ${{ secrets.EC2_USER }}
+        
+         
+      - name: Create EC2 key file
+        env:
          PRIVATE_KEY: ${{ secrets.EC2_PEM }}
+        run: |
+         echo "$PRIVATE_KEY" > github-ec2.pem
+
+      - name: Secure EC2 key file
+        env: 
          HOST: ${{ secrets.EC2_HOST }}
          USER: ${{ secrets.EC2_USER }}
         run: |
-         echo "$PRIVATE_KEY" > github-ec2.pem && chmod 600 github-ec2.pem
+         chmod 600 github-ec2.pem
          ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${USER}@${HOST}
          echo "Current directory: $(pwd)"
          echo "Listing home directory:"
