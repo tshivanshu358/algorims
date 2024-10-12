@@ -91,7 +91,7 @@ jobs:
 
       - name: Verify Deployment
         run: |
-          mkdir -p ~/.ssh
+          
           echo "${{ secrets.EC2_PEM }}" > ~/.ssh/ec2_key.pem
           chmod 600 ~/.ssh/ec2_key.pem
           ssh -i ~/.ssh/ec2_key.pem $EC2_USER@$EC2_HOST
