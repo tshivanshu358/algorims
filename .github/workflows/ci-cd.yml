@@ -92,7 +92,7 @@ jobs:
       - name: Verify Deployment
         run: |
           
-          echo "${{ secrets.EC2_PEM }}" > ~/.ssh/ec2_key.pem
+          echo "${{ secrets.EC2_PEM }}" > ~/home/ubuntu/.ssh/ec2_key.pem
           chmod 600 ~/.ssh/ec2_key.pem
           ssh -i ~/.ssh/ec2_key.pem $EC2_USER@$EC2_HOST
           cd ingress
