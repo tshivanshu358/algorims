@@ -91,10 +91,8 @@ jobs:
 
       - name: Verify Deployment
         run: |
-          
-          echo "${{ secrets.EC2_PEM }}" > ~/home/ubuntu/.ssh/ec2_key.pem
-          chmod 600 ~/.ssh/ec2_key.pem
-          ssh -i ~/.ssh/ec2_key.pem $EC2_USER@$EC2_HOST
+        
+          ssh -i "${{ secrets.EC2_PEM }}" $EC2_USER@$EC2_HOST
           cd ingress
           kubectl apply -f nginx-controller.yml -n ingress-nginx
           kubectl apply -f service.yml -n ingress-nginx
