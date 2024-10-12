@@ -4,15 +4,15 @@ provider "aws" {
 
 resource "aws_eks_cluster" "assessment" {
   name     = "assessment2"
-  role_arn = aws_iam_role.eks_cluster.arn
+  role_arn = "IAM role for cluster"
 
   vpc_config {
-    subnet_ids = [aws_subnet.example.id]
+    subnet_ids = "Check the infra"
   }
 }
 
 resource "aws_iam_role" "eks_cluster" {
-  name        = "example-eks-cluster-role"
+  name        = "aws_eks_custom"
   description = "EKS Cluster Role"
 
   assume_role_policy = jsonencode({
@@ -29,7 +29,7 @@ resource "aws_iam_role" "eks_cluster" {
   })
 }
 
-resource "aws_eks_node_group" "example" {
+resource "aws_eks_node_group" "nodegroup_eks" {
   cluster_name    = "assessment2"
   node_group_name = "nodegroup_eks"
   node_role_arn   = arn:aws:iam::905418357958:role/node_eks_assess
