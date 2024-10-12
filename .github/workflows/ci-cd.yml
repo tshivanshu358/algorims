@@ -107,7 +107,7 @@ jobs:
 
       - name: Verify Nginx Controller
         run: |
-          cd ingress
-          kubectl apply -f nginx-controller.yml -n ingress-nginx
-          kubectl apply -f service.yml -n ingress-nginx
-          kubectl apply -f ingress.yml -n ingress-nginx
+          
+          kubectl apply -f ingress/nginx-controller.yml -n ingress-nginx
+          kubectl apply -f ingress/service.yml -n ingress-nginx
+          kubectl apply -f ingress/ingress.yml -n ingress-nginx
