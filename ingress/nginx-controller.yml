@@ -40,18 +40,6 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 10
       serviceAccountName: nginx-ingress-serviceaccount
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-ingress-service
-  namespace: ingress-nginx
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 80
-    - port: 443
-      targetPort: 443
-  selector:
-    app: nginx-ingress
+
+
+
