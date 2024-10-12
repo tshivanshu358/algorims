@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy
 
-    steps:
+    steps:        
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -91,9 +91,11 @@ jobs:
 
       - name: Verify Deployment
         run: |
-          kubectl apply -f ingress/nginx-controller.yml
-          kubectl apply -f ingress/service.yml
-          kubectl apply -f ingress/ingress.yml
+          ssh -i ~/.ssh/ec2_key.pem $EC2_USER@$EC2_HOST
+          cd ingress
+          kubectl apply -f nginx-controller.yml -n ingress-nginx
+          kubectl apply -f service.yml -n ingress-nginx
+          kubectl apply -f ingress.yml -n ingress-nginx
           kubectl get deployments
           kubectl get pods
           kubectl get svc
