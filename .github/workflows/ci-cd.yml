@@ -75,13 +75,9 @@ jobs:
     needs: deploy
 
     steps:    
-      - name: Deploy to EC2
-        env:
-         
-         HOST: ${{ secrets.EC2_HOST }}
-         USER: ${{ secrets.EC2_USER }}
+      - name: Checkout code
+        uses: actions/checkout@v2        
         
-         
       - name: Create EC2 key file
         env:
          PRIVATE_KEY: ${{ secrets.EC2_PEM }}
