@@ -68,6 +68,7 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yml
+          rm -rf ~/.ssh/ec2_key.pem
 
   verify:
     name: Verify Deployment
@@ -78,21 +79,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2        
         
-      - name: Create EC2 key file
+      - name: Transfer code to EC2
         env:
-         PRIVATE_KEY: ${{ secrets.EC2_PEM }}
+          EC2_USER: ubuntu
+          EC2_HOST: ${{ secrets.EC2_IP }}
+          #EC2_KEY: ${{ secrets.EC2_PEM }}
         run: |
-         echo "$PRIVATE_KEY" > github-ec2.pem
+          mkdir -p ~/.ssh 
+          echo "${{ secrets.EC2_PEM }}" > ~/.ssh/ec2_key.pem
+          chmod 600 ~/.ssh/ec2_key.pem
+          ssh -i ~/.ssh/ec2_key.pem $EC2_USER@$EC2_HOST
 
-      - name: Secure EC2 key file
-        env: 
-         HOST: ${{ secrets.EC2_HOST }}
-         USER: ${{ secrets.EC2_USER }}
-        run: |
-         chmod 600 github-ec2.pem
-         ssh -o StrictHostKeyChecking=no -i github-ec2.pem ${USER}@${HOST}
-         echo "Current directory: $(pwd)"
-         echo "Listing home directory:"
           
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
