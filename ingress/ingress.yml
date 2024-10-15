@@ -5,7 +5,9 @@ metadata:
   namespace: ingress-nginx  # Use the namespace where your service is deployed
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"
 spec:
+  ingressClassName: nginx
   rules:
     - host: algorim.example.com  #domain or external ip
       http:

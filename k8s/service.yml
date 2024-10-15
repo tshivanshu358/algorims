@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: go-server
-  type: LoadBalancer   #for external access
+  type: ClusterIP   #for external access
   ports:
   - protocol: TCP
     port: 80  # Expose the service on port 80
